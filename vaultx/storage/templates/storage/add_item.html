@@ -1,0 +1,142 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Add Item - VaultX</title>
+
+    <link rel="stylesheet"
+          href="{% static 'storage/style.css' %}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🔐 VaultX
+    </div>
+
+    <div class="nav-links">
+
+        <a href="{% url 'dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'logout' %}">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <div class="form-card">
+
+        <h1>
+            ➕ Add New Item
+        </h1>
+
+        <p class="form-subtitle">
+            Save a photo, document or note in your digital vault.
+        </p>
+
+
+        <form method="POST"
+              enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+
+            <label>
+                Item Title
+            </label>
+
+            <input
+                type="text"
+                name="title"
+                placeholder="e.g. My Project"
+                required
+            >
+
+
+            <label>
+                Category
+            </label>
+
+            <select name="category"
+                    required>
+
+                <option value="">
+                    Select Category
+                </option>
+
+                <option value="photo">
+                    📷 Photo
+                </option>
+
+                <option value="document">
+                    📄 Document
+                </option>
+
+                <option value="note">
+                    📝 Note
+                </option>
+
+            </select>
+
+
+            <label>
+                Description
+            </label>
+
+            <textarea
+                name="description"
+                rows="5"
+                placeholder="Write a short description..."
+            ></textarea>
+
+
+            <label>
+                Upload File
+            </label>
+
+            <input
+                type="file"
+                name="file"
+            >
+
+
+            <button
+                type="submit"
+                class="auth-btn">
+
+                💾 Save Item
+
+            </button>
+
+        </form>
+
+
+        <a class="back-link"
+           href="{% url 'dashboard' %}">
+
+            ← Back to Dashboard
+
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
+

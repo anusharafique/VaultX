@@ -1,0 +1,272 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>VaultX Dashboard</title>
+
+    <link rel="stylesheet"
+          href="{% static 'storage/style.css' %}">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🔐 VaultX
+    </div>
+
+    <div class="nav-links">
+        <a href="{% url 'dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'add_item' %}">
+            + Add Item
+        </a>
+
+        <a href="{% url 'logout' %}">
+            Logout
+        </a>
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <div class="welcome">
+
+        <h1>
+            Welcome, {{ request.user.username }} 👋
+        </h1>
+
+        <p>
+            Your personal digital vault.
+        </p>
+
+    </div>
+
+
+    <!-- Statistics -->
+
+    <div class="stats">
+
+        <div class="stat-card">
+            <h3>📷 Photos</h3>
+            <p>{{ photos }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>📄 Documents</h3>
+            <p>{{ documents }}</p>
+        </div>
+
+        <div class="stat-card">
+            <h3>📝 Notes</h3>
+            <p>{{ notes }}</p>
+        </div>
+
+    </div>
+
+
+    <a class="add-btn"
+       href="{% url 'add_item' %}">
+        + Add New Item
+    </a>
+
+
+    <h2>
+        Your Vault Items
+    </h2>
+
+
+    <!-- Search -->
+
+    <form method="GET"
+          class="search-box">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search your vault..."
+            value="{{ search }}"
+        >
+
+
+        <select name="category">
+
+            <option value="">
+                All Categories
+            </option>
+
+            <option value="photo"
+                {% if selected_category == 'photo' %}
+                    selected
+                {% endif %}>
+                📷 Photos
+            </option>
+
+            <option value="document"
+                {% if selected_category == 'document' %}
+                    selected
+                {% endif %}>
+                📄 Documents
+            </option>
+
+            <option value="note"
+                {% if selected_category == 'note' %}
+                    selected
+                {% endif %}>
+                📝 Notes
+            </option>
+
+        </select>
+
+
+        <button
+            class="add-btn"
+            type="submit">
+            Search
+        </button>
+
+    </form>
+
+
+    <br>
+
+
+    <!-- Vault Items -->
+
+    {% for item in items %}
+
+    <div class="item-card">
+
+        <h3>
+
+            {% if item.category == 'photo' %}
+                📷
+            {% elif item.category == 'document' %}
+                📄
+            {% else %}
+                📝
+            {% endif %}
+
+            {{ item.title }}
+
+        </h3>
+
+
+        <p>
+
+            <strong>
+                Category:
+            </strong>
+
+            {{ item.get_category_display }}
+
+        </p>
+
+
+        {% if item.description %}
+
+        <p>
+            {{ item.description }}
+        </p>
+
+        {% endif %}
+
+
+        <!-- Photo Preview -->
+
+        {% if item.file and item.category == 'photo' %}
+
+            <a href="{{ item.file.url }}" target="_blank">
+    <img
+        src="{{ item.file.url }}"
+        alt="{{ item.title }}"
+        class="vault-image"
+    >
+</a>
+
+        {% elif item.file %}
+
+            <br>
+
+            <a href="{{ item.file.url }}"
+               target="_blank">
+
+                📎 View / Download File
+
+            </a>
+
+        {% endif %}
+
+
+        <br>
+        <br>
+
+
+        <!-- Edit -->
+
+        <a href="{% url 'edit_item' item.id %}">
+            ✏️ Edit
+        </a>
+
+
+        <br>
+        <br>
+
+
+        <!-- Delete -->
+
+        <form method="POST"
+              action="{% url 'delete_item' item.id %}">
+
+            {% csrf_token %}
+
+            <button
+                class="delete-btn"
+                type="submit">
+
+                🗑️ Delete
+
+            </button>
+
+        </form>
+
+    </div>
+
+
+    {% empty %}
+
+        <div class="item-card">
+
+            <h3>
+                📦 Your vault is empty
+            </h3>
+
+            <p>
+                Start by adding your first item.
+            </p>
+
+            <br>
+
+            <a class="add-btn"
+               href="{% url 'add_item' %}">
+
+                + Add Your First Item
+
+            </a>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+</body>
+</html>
+

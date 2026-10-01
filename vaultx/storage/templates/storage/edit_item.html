@@ -1,0 +1,178 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Edit Item | VaultX</title>
+
+    <link rel="stylesheet"
+          href="{% static 'storage/style.css' %}">
+
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+        🔐 VaultX
+    </div>
+
+    <div class="nav-links">
+
+        <a href="{% url 'dashboard' %}">
+            Dashboard
+        </a>
+
+        <a href="{% url 'logout' %}">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+
+<div class="container">
+
+    <div class="welcome">
+
+        <h1>Edit Item ✏️</h1>
+
+        <p>
+            Update your vault item.
+        </p>
+
+    </div>
+
+
+    <div class="item-card">
+
+        <form
+            method="POST"
+            enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+
+            <label>
+                Title
+            </label>
+
+            <br><br>
+
+            <input
+                type="text"
+                name="title"
+                value="{{ item.title }}"
+                required
+            >
+
+            <br><br>
+
+
+            <label>
+                Category
+            </label>
+
+            <br><br>
+
+            <select name="category" required>
+
+                <option value="photo"
+                    {% if item.category == 'photo' %}
+                        selected
+                    {% endif %}>
+                    📷 Photo
+                </option>
+
+                <option value="document"
+                    {% if item.category == 'document' %}
+                        selected
+                    {% endif %}>
+                    📄 Document
+                </option>
+
+                <option value="note"
+                    {% if item.category == 'note' %}
+                        selected
+                    {% endif %}>
+                    📝 Note
+                </option>
+
+            </select>
+
+            <br><br>
+
+
+            <label>
+                Description
+            </label>
+
+            <br><br>
+
+            <textarea
+                name="description"
+                rows="5"
+                placeholder="Write a description..."
+            >{{ item.description }}</textarea>
+
+            <br><br>
+
+
+            <label>
+                Replace File
+            </label>
+
+            <br><br>
+
+            <input
+                type="file"
+                name="file"
+            >
+
+            <br><br>
+
+
+            {% if item.file %}
+
+                <p>
+                    Current file:
+                    <a
+                        href="{{ item.file.url }}"
+                        target="_blank">
+                        View Current File
+                    </a>
+                </p>
+
+                <br>
+
+            {% endif %}
+
+
+            <button
+                class="add-btn"
+                type="submit">
+
+                Save Changes
+
+            </button>
+
+
+            <a
+                href="{% url 'dashboard' %}"
+                style="margin-left: 15px;">
+
+                Cancel
+
+            </a>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>
